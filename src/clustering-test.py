@@ -6,7 +6,7 @@ import numpy as np
 
 # Reading distance matrix from csv file
 matrix = []
-with open('assets/weights.csv') as csvFile:
+with open('assets/location-weights.csv') as csvFile:
     readCSV = csv.reader(csvFile, delimiter=',')
     for row in readCSV:
         for i, str in enumerate(row):
