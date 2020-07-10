@@ -17,14 +17,15 @@ class Pathfinder:
     def __init__(self, distance_matrix):
         self.node_amount = len(distance_matrix)
         self.distance_matrix = distance_matrix
-        self.calculated_matrix = [[None] * len(distance_matrix[0]) for i in range(len(distance_matrix))]
+        self.calculated_paths_matrix = [[PathNode(0, []) for j in range(len(distance_matrix[0]))] for i in range(len(distance_matrix))]
         self._calculate_paths()
 
     def get_path(self, from_node, to_node):
-        return self.calculated_matrix[from_node][to_node]
+        return self.calculated_paths_matrix[from_node][to_node]
 
     def _calculate_paths(self):
-        return None
+        for i in range(self.node_amount):
+            self._dijkstra(i)
 
     # Operations we need:
     def _dijkstra(self, start_node):
@@ -35,29 +36,24 @@ class Pathfinder:
                 continue
             array.sorted_add(DistanceNode(i, math.inf))
 
-        result = SortedLinkedList()
         while len(array) > 0:
-            closest_node = array.pop()
-            adjacent_nodes = self.distance_matrix[closest_node.index]
+            current_node = array.pop()
+            adjacent_nodes = self.distance_matrix[current_node.index]
             for i, adj in enumerate(adjacent_nodes):
                 node = DistanceNode(i, adj)
-                current_node = array.get(node)
-                new_distance = adj + closest_node.distance
-                if current_node is not None and new_distance < current_node.distance:
-                    array.remove(current_node)
-                    current_node.distance = new_distance
-                    array.sorted_add(current_node)
-            result.sorted_add(closest_node)
-        print(result)
-
-    # Adds the node into array with insertion sort by descending
-    # This makes insertion sort perform at O(n) instead of o(n^2)
-    # because the array is already nearly sorted
-    # We want descending because popping by the last node is O(1)
-    def _sorted_add(self, array, node):
-        for i, n in enumerate(array):
-            if node.distance > n.distance:
-                array.insert(i, node)
+                adjacent_node = array.get(node)
+                new_distance = adj + current_node.distance
+                if adjacent_node is not None and new_distance < adjacent_node.distance:
+                    curr_path_node = self.calculated_paths_matrix[start_node][current_node.index]
+                    adj_path_node = self.calculated_paths_matrix[start_node][adjacent_node.index]
+                    if current_node.index != start_node:
+                        shortest_path = curr_path_node.path.copy()
+                        shortest_path.append(current_node.index)
+                        adj_path_node.path = shortest_path
+                    adj_path_node.distance = new_distance
+                    array.remove(adjacent_node)
+                    adjacent_node.distance = new_distance
+                    array.sorted_add(adjacent_node)
 
 class DistanceNode:
     def __init__(self, index, distance):
@@ -85,6 +81,14 @@ class DistanceNode:
     def __repr__(self):
         return "%s: %s" % (self.index, self.distance)
 
+class PathNode:
+    def __init__(self, distance, path):
+        self.distance = distance
+        self.path = path
+
+    def __repr__(self):
+        return "Distance: %s\nPath: %s\n" % (self.distance, self.path)
+
 class Node:
     def __init__(self, value):
         self.next = None
@@ -98,6 +102,10 @@ class SortedLinkedList:
         self.head = Node(None)
         self.size = 0
 
+    # Adds the node into the list with insertion sort by ascending
+    # This makes insertion sort perform at O(n) instead of o(n^2)
+    # because the array is already nearly sorted
+    # We want ascending because popping the first node is O(1)
     def sorted_add(self, value):
         if self.size <= 0:
             self.head.next = Node(value)
