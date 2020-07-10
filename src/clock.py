@@ -23,8 +23,8 @@ class Clock:
         if start_match is None or end_match is None:
             raise ValueError("Either the start_time or end_time does not match the time format! Time should be formatted as: hh:mm (AM/PM)")
 
-        start = self._since_midnight_in_minutes(start_time)
-        end = self._since_midnight_in_minutes(end_time)
+        start = self._since_midnight_in_seconds(start_time)
+        end = self._since_midnight_in_seconds(end_time)
 
         self.start_time = start
         self.current_time = start
@@ -51,5 +51,5 @@ class Clock:
         self.timer.start()
 
     @staticmethod
-    def _since_midnight_in_minutes(time):
-        return (datetime.strptime(time, "%I:%M %p") - datetime.strptime("12:00 AM", "%I:%M %p")).total_seconds() / 60
+    def _since_midnight_in_seconds(time):
+        return (datetime.strptime(time, "%I:%M %p") - datetime.strptime("12:00 AM", "%I:%M %p")).total_seconds()
