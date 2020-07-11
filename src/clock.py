@@ -1,9 +1,6 @@
-import re
-from datetime import datetime
 from event import Event
 import threading
-
-time_regex = "^([1-9]|0[1-9]|1[0-2])[:]([0-5][0-9])[ ]([AP]M)$"
+import timeutil
 
 class Clock:
     def __init__(self):
@@ -18,21 +15,20 @@ class Clock:
     def start(self, start_time, end_time, interval_secs, time_delta):
         if self.timer is not None:
             return
-        start_match = re.match(time_regex, start_time)
-        end_match = re.match(time_regex, end_time)
-        if start_match is None or end_match is None:
-            raise ValueError("Either the start_time or end_time does not match the time format! Time should be formatted as: hh:mm (AM/PM)")
 
-        start = self._since_midnight_in_seconds(start_time)
-        end = self._since_midnight_in_seconds(end_time)
+        try:
+            start = timeutil.to_seconds(start_time)
+            end = timeutil.to_seconds(end_time)
 
-        self.start_time = start
-        self.current_time = start
-        self.end_time = end
-        self.interval_secs = interval_secs
-        self.time_delta = time_delta
-        self.timer = threading.Timer(interval_secs, self._tick)
-        self.timer.start()
+            self.start_time = start
+            self.current_time = start
+            self.end_time = end
+            self.interval_secs = interval_secs
+            self.time_delta = time_delta
+            self.timer = threading.Timer(interval_secs, self._tick)
+            self.timer.start()
+        except ValueError as e:
+            print(e)
 
     def stop(self):
         if self.timer is None:
@@ -49,7 +45,3 @@ class Clock:
 
         self.timer = threading.Timer(self.interval_secs, self._tick)
         self.timer.start()
-
-    @staticmethod
-    def _since_midnight_in_seconds(time):
-        return (datetime.strptime(time, "%I:%M %p") - datetime.strptime("12:00 AM", "%I:%M %p")).total_seconds()

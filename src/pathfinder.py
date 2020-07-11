@@ -1,5 +1,10 @@
 import math
 
+class Borg:
+    _shared_state = {}
+    def __init__(self):
+        self.__dict__ = self._shared_state
+
 # Pathfinder using the A* algorithm
 # A* algorithm recap:
 # TotalWeight (f): sum of StartWeight (g) and EndWeight (h)
@@ -13,12 +18,14 @@ import math
 # to each other. Since A* always chooses the good enough path to the end
 # point, it will always choose the direct path from the start to end, even
 # if there are other better paths. We have to use the Djikstra's algorithm.
-class Pathfinder:
-    def __init__(self, distance_matrix):
-        self.node_amount = len(distance_matrix)
-        self.distance_matrix = distance_matrix
-        self.calculated_paths_matrix = [[PathNode(0, []) for j in range(len(distance_matrix[0]))] for i in range(len(distance_matrix))]
-        self._calculate_paths()
+class Pathfinder(Borg):
+    def __init__(self, distance_matrix=None):
+        Borg.__init__(self)
+        if distance_matrix is not None:
+            self.distance_matrix = distance_matrix
+            self.node_amount = len(distance_matrix)
+            self.calculated_paths_matrix = [[PathNode(0, []) for j in range(len(distance_matrix[0]))] for i in range(len(distance_matrix))]
+            self._calculate_paths()
 
     def get_path(self, from_node, to_node):
         return self.calculated_paths_matrix[from_node][to_node]
@@ -27,21 +34,30 @@ class Pathfinder:
         for i in range(self.node_amount):
             self._dijkstra(i)
 
-    # Operations we need:
     def _dijkstra(self, start_node):
-        array = SortedLinkedList()
-        array.sorted_add(DistanceNode(start_node, 0))
+        array = ConstantArray(self.node_amount)
         for i in range(self.node_amount):
             if i == start_node:
+                array[start_node] = DistanceNode(start_node, 0)
                 continue
-            array.sorted_add(DistanceNode(i, math.inf))
+            array[i] = DistanceNode(i, math.inf)
 
         while len(array) > 0:
-            current_node = array.pop()
+            # Find the closest node in array
+            min = math.inf
+            min_index = 0
+            for i, node in enumerate(array):
+                if node is None:
+                    continue
+                if node.distance < min:
+                    min = node.distance
+                    min_index = i
+
+            current_node = array[min_index]
+            del array[min_index]
             adjacent_nodes = self.distance_matrix[current_node.index]
             for i, adj in enumerate(adjacent_nodes):
-                node = DistanceNode(i, adj)
-                adjacent_node = array.get(node)
+                adjacent_node = array[i]
                 new_distance = adj + current_node.distance
                 if adjacent_node is not None and new_distance < adjacent_node.distance:
                     curr_path_node = self.calculated_paths_matrix[start_node][current_node.index]
@@ -51,9 +67,7 @@ class Pathfinder:
                         shortest_path.append(current_node.index)
                         adj_path_node.path = shortest_path
                     adj_path_node.distance = new_distance
-                    array.remove(adjacent_node)
                     adjacent_node.distance = new_distance
-                    array.sorted_add(adjacent_node)
 
 class DistanceNode:
     def __init__(self, index, distance):
@@ -88,6 +102,37 @@ class PathNode:
 
     def __repr__(self):
         return "Distance: %s\nPath: %s\n" % (self.distance, self.path)
+
+# A constant length array, where remove simply sets the value to none
+# search: O(n), access: O(1), remove: O(1), add: N/A, insert: O(1)
+class ConstantArray:
+    def __init__(self, size):
+        self._array = [None] * size
+        self.max_size = size
+        self._size = 0
+        self._counter = 0
+
+    def __getitem__(self, key):
+        return self._array[key]
+
+    def __setitem__(self, key, value):
+        if value is None:
+            raise ValueError("Cannot set the value None at index '%s'. Use this instead: del array[key]." % key)
+        self._array[key] = value
+        self._size += 1
+
+    def __delitem__(self, key):
+        self._array[key] = None
+        self._size -= 1
+
+    def __len__(self):
+        return self._size
+
+    def __repr__(self):
+        return self._array.__repr__()
+
+    def __iter__(self):
+        return self._array.__iter__()
 
 class Node:
     def __init__(self, value):

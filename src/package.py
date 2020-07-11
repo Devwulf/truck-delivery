@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
+import timeutil
 
-time_regex = "^([1-9]|0[1-9]|1[0-2])[:]([0-5][0-9])[ ]([AP]M)$"
 num_arr_regex = "^((\d*, ?)*(\d+)|\[(\d*, ?)*(\d+)\])$"
 
 class Package:
@@ -34,19 +34,14 @@ class Package:
             raise ValueError("Address Id cannot be a negative value!")
         self._address_id = val
 
-    def _get_delivery_time(self):
-        return self._delivery_time.strftime("%I:%M %p")
+    def _get_delivery_time(self, is_seconds=False):
+        if is_seconds:
+            return self._delivery_time
+        return timeutil.to_time(self._delivery_time)
 
     def _set_delivery_time(self, value):
-        match = re.search(time_regex, value)
-        val = value
-        if match is None:
-            if value == "EOD":
-                val = "11:59 PM"
-            else:
-                raise ValueError("The given time does not match the time format! Given time: %s\nTime should be formatted as: hh:mm (AM/PM)" % value)
-        time = datetime.strptime(val, "%I:%M %p").time()
-        self._delivery_time = time
+        val = "11:59:59 PM" if value == "EOD" else value
+        self._delivery_time = timeutil.to_seconds(val)
 
     def _get_has_truck_req(self):
         return self._has_truck_req
@@ -69,19 +64,14 @@ class Package:
         val = True if value == "1" else False
         self._is_delayed = val
 
-    def _get_delay_time(self):
-        return self._delay_time.strftime("%I:%M %p")
+    def _get_delay_time(self, is_seconds=False):
+        if is_seconds:
+            return self._delivery_time
+        return timeutil.to_time(self._delay_time)
 
     def _set_delay_time(self, value):
-        match = re.search(time_regex, value)
-        val = value
-        if match is None:
-            if value == "-1":
-                val = "12:00 AM"
-            else:
-                raise ValueError("The given time does not match the time format! Given time: %s\nTime should be formatted as: hh:mm (AM/PM)" % value)
-        time = datetime.strptime(val, "%I:%M %p").time()
-        self._delay_time = time
+        val = "11:59:59 PM" if value == "-1" else value
+        self._delay_time = timeutil.to_seconds(val)
 
     def _get_has_package_req(self):
         return self._has_package_req
