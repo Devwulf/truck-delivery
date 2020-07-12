@@ -64,5 +64,5 @@ class Location:
     def address_to_string(self):
         return "%s\n%s, %s %s" % (self.address, self.city, self.state, self.zip_code)
 
-    def print(self):
-        print("Location %s:\n\t%s\n%s\n" % (self.location_id, self.name, textwrap.indent(self.address_to_string(), "\t")))
+    def __repr__(self):
+        return "Location %s:\n\t%s\n%s\n" % (self.location_id, self.name, textwrap.indent(self.address_to_string(), "\t"))

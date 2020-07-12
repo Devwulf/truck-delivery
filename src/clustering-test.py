@@ -3,21 +3,9 @@ from matplotlib.pylab import show, axis
 import networkx as nx
 import csv
 import numpy as np
+from src.data import Data
 
-# Reading distance matrix from csv file
-matrix = []
-with open('assets/location-weights.csv') as csvFile:
-    readCSV = csv.reader(csvFile, delimiter=',')
-    for row in readCSV:
-        for i, str in enumerate(row):
-            row[i] = float(row[i] if row[i] else 0)
-        matrix.append(row)
-
-# Making the matrix a redundant distance matrix
-# with both the bottom left and top right filled with data
-for i, row in enumerate(matrix):
-    for j, col in enumerate(row):
-        matrix[i][j] = matrix[j][i]
+matrix = Data(True).get_locations_matrix()
 
 # Convert the matrix to a numpy array to be able to work with
 # the clustering method below

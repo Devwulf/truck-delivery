@@ -1,16 +1,19 @@
-from event import Event
+from src.event import Event
 import threading
-import timeutil
+import src.timeutil as timeutil
+from src.borg import Borg
 
-class Clock:
-    def __init__(self):
-        self.onTick = Event()
-        self.start_time = 0
-        self.current_time = 0
-        self.end_time = 0
-        self.interval_secs = 0
-        self.time_delta = 0
-        self.timer = None
+class Clock(Borg):
+    def __init__(self, initialize=False):
+        Borg.__init__(self)
+        if initialize:
+            self.onTick = Event()
+            self.start_time = 0
+            self.current_time = 0
+            self.end_time = 0
+            self.interval_secs = 0
+            self.time_delta = 0
+            self.timer = None
 
     def start(self, start_time, end_time, interval_secs, time_delta):
         if self.timer is not None:

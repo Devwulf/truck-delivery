@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-import timeutil
+import src.timeutil as timeutil
 
 num_arr_regex = "^((\d*, ?)*(\d+)|\[(\d*, ?)*(\d+)\])$"
 
@@ -110,13 +110,15 @@ class Package:
     has_package_req = property(_get_has_package_req, _set_has_package_req)
     package_req = property(_get_package_req, _set_package_req)
 
-    def print(self):
-        print("Package %s" % self.package_id)
-        print("\tAddress Id: %s\n\tDelivery Time: %s" % (self.address_id, self.delivery_time))
+    def __repr__(self):
+        message = ""
+        message += "Package %s" % self.package_id
+        message += "\tAddress Id: %s\n\tDelivery Time: %s" % (self.address_id, self.delivery_time)
         if self.has_truck_req == True:
-            print("\tTruck Req: %s" % self.truck_req)
+            message += "\tTruck Req: %s" % self.truck_req
         if self.is_delayed == True:
-            print("\tDelay Time: %s" % self.delay_time)
+            message += "\tDelay Time: %s" % self.delay_time
         if self.has_package_req == True:
-            print("\tPackage Req: %s" % self.package_req)
-        print()
+            message += "\tPackage Req: %s" % self.package_req
+        message += "\n"
+        return message
