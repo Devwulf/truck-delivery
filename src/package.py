@@ -111,6 +111,9 @@ class Package:
     package_req = property(_get_package_req, _set_package_req)
 
     def __repr__(self):
+        return str(self.package_id)
+
+    def __str__(self):
         message = ""
         message += "Package %s" % self.package_id
         message += "\tAddress Id: %s\n\tDelivery Time: %s" % (self.address_id, self.delivery_time)

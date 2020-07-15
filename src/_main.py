@@ -15,19 +15,29 @@ def main():
     locations = data.get_locations()
     location_matrix = data.get_locations_matrix()
     path = Pathfinder(location_matrix)
-    #print(path.get_path(0, 7))
+    '''
+    print(path.calculated_paths_matrix[3])
+    print(Warehouse().group_by_same_location())
+    print(Warehouse().group_by_same_location_and_truck_req([1, 2]))
+    print(Warehouse().group_location_truck_package_reqs([1, 2]))
+    print(Warehouse().group_by_package_req())
     print(Warehouse().group_by_truck_req(2))
     print(Warehouse().group_by_package_req())
     print(Warehouse().group_by_location_cluster())
+    print(Warehouse().group_all(2))
+    '''
     truck = Truck(1)
-    truck.add_delivery(7, 36)
     truck2 = Truck(2)
-    truck2.add_delivery(20, 14)
-    truck2.add_delivery(26, 22)
+    truck3 = Truck(3)
+    Warehouse().load_trucks([truck, truck2, truck3])
+    truck.plan_drive()
+    truck2.plan_drive()
+    truck3.plan_drive()
+
     clock = Clock()
-    clock.onTick += truck.drive
-    clock.onTick += truck2.drive
-    #clock.start("8:00 AM", "8:30 AM", 0.01, 20)
+    #clock.onTick += truck.drive
+    #clock.onTick += truck2.drive
+    #clock.start("8:00 AM", "11:59:59 PM", 0.01, 20)
 
 def run_on_tick(sender, current_time):
     print("Current time is: %s" % current_time)

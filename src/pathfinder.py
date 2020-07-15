@@ -21,11 +21,15 @@ class Pathfinder(Borg):
         if distance_matrix is not None:
             self.distance_matrix = distance_matrix
             self.node_amount = len(distance_matrix)
-            self.calculated_paths_matrix = [[PathNode(0, []) for j in range(len(distance_matrix[0]))] for i in range(len(distance_matrix))]
+            self.calculated_paths_matrix = [[PathNode(j, 0, []) for j in range(len(distance_matrix[0]))] for i in range(len(distance_matrix))]
             self._calculate_paths()
 
     def get_path(self, from_node, to_node):
         return self.calculated_paths_matrix[from_node][to_node]
+
+    def get_sorted_array(self, from_node):
+        array = self.calculated_paths_matrix[from_node].copy()
+        return array.sort()
 
     def _calculate_paths(self):
         for i in range(self.node_amount):
@@ -35,9 +39,10 @@ class Pathfinder(Borg):
         array = ConstantArray(self.node_amount)
         for i in range(self.node_amount):
             if i == start_node:
-                array[start_node] = DistanceNode(start_node, 0)
+
+                array[start_node] = PathNode(start_node, 0, [])
                 continue
-            array[i] = DistanceNode(i, math.inf)
+            array[i] = PathNode(i, math.inf, [])
 
         while len(array) > 0:
             # Find the closest node in array
@@ -65,10 +70,11 @@ class Pathfinder(Borg):
                     adj_path_node.distance = new_distance
                     adjacent_node.distance = new_distance
 
-class DistanceNode:
-    def __init__(self, index, distance):
+class PathNode:
+    def __init__(self, index, distance, path):
         self.index = index
         self.distance = distance
+        self.path = path
 
     def __eq__(self, other):
         return self.index == other.index
@@ -88,16 +94,11 @@ class DistanceNode:
     def __ge__(self, other):
         return self.distance >= other.distance
 
-    def __repr__(self):
-        return "%s: %s" % (self.index, self.distance)
-
-class PathNode:
-    def __init__(self, distance, path):
-        self.distance = distance
-        self.path = path
+    def __str__(self):
+        return "Index: %s\nDistance: %s\nPath: %s\n" % (self.index, self.distance, self.path)
 
     def __repr__(self):
-        return "Distance: %s\nPath: %s\n" % (self.distance, self.path)
+        return "%s: %s (%s)" % (self.index, self.distance, self.path)
 
 class Node:
     def __init__(self, value):
@@ -168,6 +169,13 @@ class SortedLinkedList:
             prev_node = current
             current = current.next
         return None
+
+    def to_array(self):
+        array = []
+        current = self.head.next
+        while current is not None:
+            array.append(current.value)
+        return array
 
     def __repr__(self):
         message = "Size: %s\n" % self.size

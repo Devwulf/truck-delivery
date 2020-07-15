@@ -97,7 +97,7 @@ class Data(Borg):
 
     def get_location(self, id):
         locations = self.get_locations()
-        return locations[id - 1]
+        return locations[id]
 
     packages = property(get_packages)
     locations = property(get_locations)
