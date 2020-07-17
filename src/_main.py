@@ -15,6 +15,7 @@ def main():
     locations = data.get_locations()
     location_matrix = data.get_locations_matrix()
     path = Pathfinder(location_matrix)
+    print(Warehouse().group_by_same_location())
     '''
     print(path.calculated_paths_matrix[3])
     print(Warehouse().group_by_same_location())
@@ -29,13 +30,14 @@ def main():
     truck = Truck(1)
     truck2 = Truck(2)
     truck3 = Truck(3)
-    Warehouse().load_trucks([truck, truck2, truck3])
+    Warehouse().load_trucks([truck, truck2])
     truck.plan_drive()
     truck2.plan_drive()
+    Warehouse().load_trucks([truck3])
     truck3.plan_drive()
 
     clock = Clock()
-    #clock.onTick += truck.drive
+    clock.onTick += truck.drive
     #clock.onTick += truck2.drive
     #clock.start("8:00 AM", "11:59:59 PM", 0.01, 20)
 

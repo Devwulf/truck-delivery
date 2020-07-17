@@ -34,6 +34,9 @@ class Package:
             raise ValueError("Address Id cannot be a negative value!")
         self._address_id = val
 
+    def _get_is_timed(self):
+        return self._get_delivery_time(True) < 86399.0
+
     def _get_delivery_time(self, is_seconds=False):
         if is_seconds:
             return self._delivery_time
@@ -66,7 +69,7 @@ class Package:
 
     def _get_delay_time(self, is_seconds=False):
         if is_seconds:
-            return self._delivery_time
+            return self._delay_time
         return timeutil.to_time(self._delay_time)
 
     def _set_delay_time(self, value):
@@ -102,6 +105,7 @@ class Package:
 
     package_id = property(_get_package_id, _set_package_id)
     address_id = property(_get_address_id, _set_address_id)
+    is_timed = property(_get_is_timed)
     delivery_time = property(_get_delivery_time, _set_delivery_time)
     has_truck_req = property(_get_has_truck_req, _set_has_truck_req)
     truck_req = property(_get_truck_req, _set_truck_req)

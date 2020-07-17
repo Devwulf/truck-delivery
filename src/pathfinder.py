@@ -74,6 +74,7 @@ class PathNode:
     def __init__(self, index, distance, path):
         self.index = index
         self.distance = distance
+        self.time = distance / 18 * 60 * 60
         self.path = path
 
     def __eq__(self, other):
@@ -99,6 +100,15 @@ class PathNode:
 
     def __repr__(self):
         return "%s: %s (%s)" % (self.index, self.distance, self.path)
+
+    def _get_distance(self):
+        return self._distance
+
+    def _set_distance(self, value):
+        self._distance = value
+        self.time = value / 18 * 60 * 60
+
+    distance = property(_get_distance, _set_distance)
 
 class Node:
     def __init__(self, value):
