@@ -1,7 +1,7 @@
 from src.data import Data
 from src.clock import Clock
 from src.pathfinder import Pathfinder
-from src.truck import Truck
+from src.truck import TimedTruck
 from src.warehouse import Warehouse
 
 def main():
@@ -10,12 +10,9 @@ def main():
     Clock(initialize=True)
     Warehouse(initialize=True)
 
-    data = Data()
-    packages = data.get_packages()
-    locations = data.get_locations()
-    location_matrix = data.get_locations_matrix()
+    location_matrix = Data().get_locations_matrix()
     path = Pathfinder(location_matrix)
-    print(Warehouse().group_by_same_location())
+
     '''
     print(path.calculated_paths_matrix[3])
     print(Warehouse().group_by_same_location())
@@ -27,19 +24,12 @@ def main():
     print(Warehouse().group_by_location_cluster())
     print(Warehouse().group_all(2))
     '''
-    truck = Truck(1)
-    truck2 = Truck(2)
-    truck3 = Truck(3)
-    Warehouse().load_trucks([truck, truck2])
-    truck.plan_drive()
-    truck2.plan_drive()
-    Warehouse().load_trucks([truck3])
-    truck3.plan_drive()
+    truck = TimedTruck(1)
 
     clock = Clock()
-    clock.onTick += truck.drive
+    clock.onTick += truck.on_update
     #clock.onTick += truck2.drive
-    #clock.start("8:00 AM", "11:59:59 PM", 0.01, 20)
+    clock.start("8:00 AM", "11:59:59 PM", 0.01, 20)
 
 def run_on_tick(sender, current_time):
     print("Current time is: %s" % current_time)

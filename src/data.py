@@ -2,7 +2,7 @@ import csv
 from src.package import Package
 from src.location import Location
 from src.borg import Borg
-
+from src.hashmap import HashMap
 
 class Data(Borg):
     _assets_path = "assets/"
@@ -13,19 +13,22 @@ class Data(Borg):
     def __init__(self, initialize=False):
         Borg.__init__(self)
         if initialize:
-            self.__packages = []
+            self.__packages = HashMap(50)
             self.__locations = []
             self.__locations_matrix = []
+            self.get_packages()
+            self.get_locations()
+            self.get_locations_matrix()
 
     # TODO: Eventually use hashmap to store these data
-    def get_packages(self):
+    def get_packages(self) -> HashMap:
         if len(self.__packages) > 0:
             return self.__packages
 
         with open(self._assets_path + self._packages_file, encoding="utf-8-sig") as csv_file:
             read_csv = csv.reader(csv_file, delimiter=',')
             for row in read_csv:
-                if (len(row) != 9):
+                if len(row) != 9:
                     raise ValueError("The given input data for a package may have too little or too many columns.")
 
                 package_id = row[0]
@@ -40,7 +43,7 @@ class Data(Borg):
 
                 try:
                     package = Package(package_id, address_id, delivery_time, has_truck_req, truck_req, is_delayed, delay_time, has_package_req, package_req)
-                    self.__packages.append(package)
+                    self.__packages.append(package.package_id, package)
                 except ValueError as e:
                     print(e)
 
@@ -53,7 +56,7 @@ class Data(Borg):
         with open(self._assets_path + self._locations_file, encoding="utf-8-sig") as csv_file:
             read_csv = csv.reader(csv_file, delimiter=',')
             for row in read_csv:
-                if (len(row) != 6):
+                if len(row) != 6:
                     raise ValueError("The given input data for a location may have too little or too many columns.")
 
                 location_id = row[0]
@@ -91,11 +94,13 @@ class Data(Borg):
 
         return self.__locations_matrix
 
-    def get_package(self, id):
+    def get_package(self, id:int) -> Package:
         packages = self.get_packages()
-        return packages[id - 1]
+        if packages[id] is None:
+            print("Test %s" % id)
+        return packages[id]
 
-    def get_location(self, id):
+    def get_location(self, id:int) -> Location:
         locations = self.get_locations()
         return locations[id]
 

@@ -1,10 +1,11 @@
 import math
 from src.pathfinder import Pathfinder
-from src.warehouse import LocationCluster
+from src.locationcluster import LocationCluster
 import src.timeutil as timeutil
+from typing import Deque
 
 # Best to use a deque for locations
-def solve(locations, start_id, end_id):
+def solve(locations:Deque[LocationCluster], start_id:int, end_id:int):
     start_node = LocationCluster(start_id)
     final_arr = [start_node]
     shortest_distance = 0
@@ -20,19 +21,19 @@ def solve(locations, start_id, end_id):
         for i in range(len(final_arr)):
             array = final_arr.copy()
             array.insert(i + 1, current_loc)
-            distance = overall_distance(array, lambda location: location._location_id)
-            time = overall_time(array, lambda location: location._location_id)
+            distance = overall_distance(array, lambda location: location.location_id)
+            #time = overall_time(array, lambda location: location.location_id)
             if distance <= short_dist:
                 short_dist = distance
-                short_time = time
+                #short_time = time
                 shortest_path = array
         shortest_distance = short_dist
-        shortest_time = short_time
+        #shortest_time = short_time
         final_arr = shortest_path
     if end_id >= 0:
-        last_to_start = Pathfinder().get_path(final_arr[-1]._location_id, end_id)
+        last_to_start = Pathfinder().get_path(final_arr[-1].location_id, end_id)
         shortest_distance += last_to_start.distance
-        shortest_time += last_to_start.time
+        #shortest_time += last_to_start.time
         final_arr.append(LocationCluster(end_id))
     return [shortest_distance, timeutil.to_time(shortest_time), final_arr]
 

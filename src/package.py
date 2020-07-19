@@ -1,5 +1,4 @@
 import re
-from datetime import datetime
 import src.timeutil as timeutil
 
 num_arr_regex = "^((\d*, ?)*(\d+)|\[(\d*, ?)*(\d+)\])$"
@@ -35,12 +34,10 @@ class Package:
         self._address_id = val
 
     def _get_is_timed(self):
-        return self._get_delivery_time(True) < 86399.0
+        return self.delivery_time < 86399.0
 
-    def _get_delivery_time(self, is_seconds=False):
-        if is_seconds:
-            return self._delivery_time
-        return timeutil.to_time(self._delivery_time)
+    def _get_delivery_time(self):
+        return self._delivery_time
 
     def _set_delivery_time(self, value):
         val = "11:59:59 PM" if value == "EOD" else value
@@ -67,10 +64,8 @@ class Package:
         val = True if value == "1" else False
         self._is_delayed = val
 
-    def _get_delay_time(self, is_seconds=False):
-        if is_seconds:
-            return self._delay_time
-        return timeutil.to_time(self._delay_time)
+    def _get_delay_time(self):
+        return self._delay_time
 
     def _set_delay_time(self, value):
         val = "11:59:59 PM" if value == "-1" else value
