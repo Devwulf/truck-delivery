@@ -1,13 +1,14 @@
 from src.borg import Borg
 from src.data import Data
 from src.hashmap import HashMap
+from typing import List
 
 class Warehouse(Borg):
     def __init__(self, initialize=False):
         Borg.__init__(self)
         if initialize:
             hashmap:HashMap = Data().get_packages()
-            self.__packages = sorted(hashmap.keys())
+            self.__packages:List[int] = sorted(hashmap.keys())
 
     def get_packages(self):
         return self.__packages

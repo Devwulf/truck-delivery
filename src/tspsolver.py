@@ -35,7 +35,9 @@ def solve(locations:Deque[LocationCluster], start_id:int, end_id:int):
         shortest_distance += last_to_start.distance
         #shortest_time += last_to_start.time
         final_arr.append(LocationCluster(end_id))
-    return [shortest_distance, timeutil.to_time(shortest_time), final_arr]
+    if final_arr[0].location_id == final_arr[-1].location_id and len(final_arr) == 2:
+        return [0, 0, []]
+    return [shortest_distance, timeutil.to_time(shortest_time), final_arr[1:]]
 
 def overall_distance(location_array, get_id):
     path = Pathfinder()

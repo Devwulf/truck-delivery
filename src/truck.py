@@ -2,8 +2,8 @@ from collections import deque
 from src.pathfinder import Pathfinder
 from src.data import Data
 import src.timeutil as timeutil
-from src.constantarray import ConstantArray
 from src.warehouse import Warehouse
+from src.package import Package
 from src.locationcluster import LocationCluster
 import src.packageutil as packageutil
 import src.tspsolver as tsp
@@ -20,14 +20,25 @@ class AbstractTruck(ABC):
         self.odometer = 0
         self.current_location = 0
         self.delivery_path:Deque[LocationCluster] = deque()
+        self.__sender = None
 
     def on_update(self, sender, current_seconds:int):
+        if self.__sender is None:
+            self.__sender = sender
+
         if self.load_packages_when(current_seconds):
             self.load_packages()
         else:
             self.drive(current_seconds)
 
+    def end_update(self):
+        if self.__sender is None:
+            return
+        self.__sender.onTick -= self.on_update
+
     def drive(self, current_seconds:int):
+        if len(self.delivery_path) <= 0:
+            return
 
         current_time:str = timeutil.to_time(current_seconds)
 
@@ -43,6 +54,10 @@ class AbstractTruck(ABC):
         current_location = Data().get_location(self.current_location)
         location = Data().get_location(next_location.location_id)
         if self.eta == -1:
+            if next_location.location_id == current_location.location_id:
+                self.delivery_path.popleft()
+                return
+
             print("%s: Driving from location %s to location %s to deliver packages '%s'." % (current_time, current_location.address, location.address, next_location.packages))
             path_node = Pathfinder().get_path(self.current_location, next_location.location_id)
             self.eta = path_node.distance / self.speed * 60 * 60 + current_seconds
@@ -90,6 +105,8 @@ class TimedTruck(AbstractTruck):
     def load_packages(self):
         packages:List[int] = Warehouse().get_packages()
         if len(packages) <= 0:
+            print("Odometer of truck %s is: %s miles" % (self.truck_id, self.odometer))
+            self.end_update()
             return
 
         packages_with_same_package_req = packageutil.get_package_ids_with_same_package_req(packages)
@@ -99,15 +116,58 @@ class TimedTruck(AbstractTruck):
         if len(timed_packages) < 16:
             timed_packages.extend(packageutil.fill_with_same_package_req(timed_packages, packages, packages_with_same_package_req))
         if len(timed_packages) < 16:
+            truck_req_packages = packageutil.get_packages_with_predicate(packages, predicate=lambda package: package.truck_req == self.truck_id)
+            timed_packages.extend(truck_req_packages)
+        if len(timed_packages) < 16:
             timed_packages.extend(packageutil.fill_up(timed_packages, packages, 16 - len(timed_packages)))
 
         timed_packages_cluster = packageutil.to_location_clusters(timed_packages)
         solved = tsp.solve(deque(timed_packages_cluster), 0, 0)
         self.delivery_path = deque(solved[2])
-        print(self.delivery_path)
         packages.extend(delayed_packages)
 
     def load_packages_when(self, current_seconds) -> bool:
         if self.current_location == 0 and len(self.delivery_path) <= 0:
+            return True
+        return False
+
+class DelayedTruck(AbstractTruck):
+    """
+    Waits for and loads the earliest delayed packages
+    """
+
+    def __init__(self, id, speed=18):
+        super().__init__(id, speed)
+        self.earliest_delay_time = math.inf
+        packages:List[int] = Warehouse().get_packages()
+        for package_id in packages:
+            package:Package = Data().get_package(package_id)
+            if package.is_delayed and package.delay_time < self.earliest_delay_time:
+                self.earliest_delay_time = package.delay_time
+
+    def load_packages(self):
+        packages:List[int] = Warehouse().get_packages()
+        if len(packages) <= 0:
+            print("Odometer of truck %s is: %s miles" % (self.truck_id, self.odometer))
+            self.end_update()
+            return
+
+        packages_with_same_package_req = packageutil.get_package_ids_with_same_package_req(packages)
+        delayed_packages = packageutil.get_delayed_packages_only(packages)
+
+        if len(delayed_packages) < 16:
+            delayed_packages.extend(packageutil.fill_with_same_package_req(delayed_packages, packages, packages_with_same_package_req))
+        if len(delayed_packages) < 16:
+            truck_req_packages = packageutil.get_packages_with_predicate(packages, predicate=lambda package: package.truck_req == self.truck_id)
+            delayed_packages.extend(truck_req_packages)
+        if len(delayed_packages) < 16:
+            delayed_packages.extend(packageutil.fill_up(delayed_packages, packages, 16 - len(delayed_packages)))
+
+        delayed_packages_cluster = packageutil.to_location_clusters(delayed_packages)
+        solved = tsp.solve(deque(delayed_packages_cluster), 0, 0)
+        self.delivery_path = deque(solved[2])
+
+    def load_packages_when(self, current_seconds:int) -> bool:
+        if current_seconds >= self.earliest_delay_time and self.current_location == 0 and len(self.delivery_path) <= 0:
             return True
         return False
