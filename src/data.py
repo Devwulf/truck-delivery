@@ -28,7 +28,7 @@ class Data(Borg):
         with open(self._assets_path + self._packages_file, encoding="utf-8-sig") as csv_file:
             read_csv = csv.reader(csv_file, delimiter=',')
             for row in read_csv:
-                if len(row) != 9:
+                if len(row) != 11:
                     raise ValueError("The given input data for a package may have too little or too many columns.")
 
                 package_id = row[0]
