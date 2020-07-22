@@ -1,10 +1,16 @@
 import re
 import src.timeutil as timeutil
+from enum import IntEnum
 
 num_arr_regex = "^((\d*, ?)*(\d+)|\[(\d*, ?)*(\d+)\])$"
 
+class DeliveryStatus(IntEnum):
+    NotDelivered = 0
+    EnRoute = 1
+    Delivered = 2
+
 class Package:
-    def __init__(self, package_id, address_id, delivery_time, has_truck_req, truck_req, is_delayed, delay_time, has_package_req, package_req):
+    def __init__(self, package_id, address_id, delivery_time, has_truck_req, truck_req, is_delayed, delay_time, has_package_req, package_req, mass, delivery_status):
         self.package_id = package_id
         self.address_id = address_id
         self.delivery_time = delivery_time
@@ -14,6 +20,8 @@ class Package:
         self.delay_time = delay_time
         self.has_package_req = has_package_req
         self.package_req = package_req
+        self.mass = mass
+        self.delivery_status = delivery_status
 
     def _get_package_id(self):
         return self._package_id
@@ -98,6 +106,18 @@ class Package:
         num_arr = [] if len(no_spaces) <= 0 else [int(s) for s in no_spaces.split(',')]
         self._package_req = num_arr
 
+    def _get_mass(self):
+        return self._mass
+
+    def _set_mass(self, value):
+        self._mass = int(value)
+
+    def _get_delivery_status(self):
+        return self._delivery_status
+
+    def _set_delivery_status(self, value):
+        self._delivery_status = DeliveryStatus(int(value))
+
     package_id = property(_get_package_id, _set_package_id)
     address_id = property(_get_address_id, _set_address_id)
     is_timed = property(_get_is_timed)
@@ -108,6 +128,8 @@ class Package:
     delay_time = property(_get_delay_time, _set_delay_time)
     has_package_req = property(_get_has_package_req, _set_has_package_req)
     package_req = property(_get_package_req, _set_package_req)
+    mass = property(_get_mass, _set_mass)
+    delivery_status = property(_get_delivery_status, _set_delivery_status)
 
     def __repr__(self):
         return str(self.package_id)
@@ -115,7 +137,7 @@ class Package:
     def __str__(self):
         message = ""
         message += "Package %s" % self.package_id
-        message += "\tAddress Id: %s\n\tDelivery Time: %s" % (self.address_id, self.delivery_time)
+        message += "\tAddress Id: %s\n\tDelivery Time: %s\n\tMass: %s" % (self.address_id, self.delivery_time, self.mass)
         if self.has_truck_req == True:
             message += "\tTruck Req: %s" % self.truck_req
         if self.is_delayed == True:

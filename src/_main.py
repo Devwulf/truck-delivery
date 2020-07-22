@@ -11,7 +11,7 @@ def main():
     Warehouse(initialize=True)
 
     location_matrix = Data().get_locations_matrix()
-    path = Pathfinder(location_matrix)
+    Pathfinder(location_matrix)
 
     truck = TimedTruck(1)
     truck2 = DelayedTruck(2)

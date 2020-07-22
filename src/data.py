@@ -40,9 +40,11 @@ class Data(Borg):
                 delay_time = row[6]
                 has_package_req = row[7]
                 package_req = row[8]
+                mass = row[9]
+                delivery_status = row[10]
 
                 try:
-                    package = Package(package_id, address_id, delivery_time, has_truck_req, truck_req, is_delayed, delay_time, has_package_req, package_req)
+                    package = Package(package_id, address_id, delivery_time, has_truck_req, truck_req, is_delayed, delay_time, has_package_req, package_req, mass, delivery_status)
                     self.__packages.append(package.package_id, package)
                 except ValueError as e:
                     print(e)
