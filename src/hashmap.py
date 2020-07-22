@@ -17,13 +17,13 @@ class HashMap:
             raise ValueError("Can't have similar keys in the map: %s:%s\nSimilar to %s" % (key_hash, value, self.__map[key_hash]))
 
     def pop(self, key):
-        keyHash = self.__get_hash(key)
+        key_hash = self.__get_hash(key)
 
-        if self.__map[keyHash] is None:
+        if self.__map[key_hash] is None:
             return None
 
-        value = self.__map[keyHash]
-        self.__map[keyHash] = None
+        value = self.__map[key_hash]
+        self.__map[key_hash] = None
         self.__size -= 1
         return value
 

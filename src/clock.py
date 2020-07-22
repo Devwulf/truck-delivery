@@ -7,7 +7,8 @@ class Clock(Borg):
     def __init__(self, initialize=False):
         Borg.__init__(self)
         if initialize:
-            self.onTick = Event()
+            self.on_tick = Event()
+            self.on_stop = Event()
             self.start_time = 0
             self.current_time = 0
             self.end_time = 0
@@ -41,8 +42,9 @@ class Clock(Borg):
 
     def _tick(self):
         self.current_time += self.time_delta
-        self.onTick(self, self.current_time)
-        if self.current_time >= self.end_time:
+        self.on_tick(self, self.current_time)
+        if len(self.on_tick) <= 0 or self.current_time >= self.end_time:
+            self.on_stop(self, self.current_time)
             self.stop()
             return
 

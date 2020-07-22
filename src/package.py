@@ -8,6 +8,7 @@ class DeliveryStatus(IntEnum):
     NotDelivered = 0
     EnRoute = 1
     Delivered = 2
+    DeliveredLate = 3
 
 class Package:
     def __init__(self, package_id, address_id, delivery_time, has_truck_req, truck_req, is_delayed, delay_time, has_package_req, package_req, mass, delivery_status):
@@ -22,6 +23,7 @@ class Package:
         self.package_req = package_req
         self.mass = mass
         self.delivery_status = delivery_status
+        self.delivered_at = 0
 
     def _get_package_id(self):
         return self._package_id
@@ -136,13 +138,13 @@ class Package:
 
     def __str__(self):
         message = ""
-        message += "Package %s" % self.package_id
-        message += "\tAddress Id: %s\n\tDelivery Time: %s\n\tMass: %s" % (self.address_id, self.delivery_time, self.mass)
+        message += "Package %s\n" % self.package_id
+        message += "\tAddress Id: %s\n\tDelivery Time: %s\n\tMass: %s\n\tDelivery Status: %s (%s)" % (self.address_id, timeutil.to_time(self.delivery_time), self.mass, DeliveryStatus(self.delivery_status).name, timeutil.to_time(self.delivered_at))
         if self.has_truck_req == True:
-            message += "\tTruck Req: %s" % self.truck_req
+            message += "\n\tTruck Req: %s" % self.truck_req
         if self.is_delayed == True:
-            message += "\tDelay Time: %s" % self.delay_time
+            message += "\n\tDelay Time: %s" % self.delay_time
         if self.has_package_req == True:
-            message += "\tPackage Req: %s" % self.package_req
+            message += "\n\tPackage Req: %s" % self.package_req
         message += "\n"
         return message

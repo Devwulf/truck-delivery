@@ -3,7 +3,7 @@ from src.pathfinder import Pathfinder
 from src.data import Data
 import src.timeutil as timeutil
 from src.warehouse import Warehouse
-from src.package import Package
+from src.package import Package, DeliveryStatus
 from src.locationcluster import LocationCluster
 import src.packageutil as packageutil
 import src.tspsolver as tsp
@@ -34,7 +34,7 @@ class AbstractTruck(ABC):
     def end_update(self):
         if self.__sender is None:
             return
-        self.__sender.onTick -= self.on_update
+        self.__sender.on_tick -= self.on_update
 
     def drive(self, current_seconds:int):
         if len(self.delivery_path) <= 0:
@@ -65,6 +65,9 @@ class AbstractTruck(ABC):
         if current_seconds >= self.eta:
             next_delivery = self.delivery_path.popleft()
             for package in next_delivery:
+                delivery_status = DeliveryStatus.DeliveredLate if package.is_timed and current_seconds > package.delivery_time else DeliveryStatus.Delivered
+                package.delivery_status = delivery_status.value
+                package.delivered_at = current_seconds
                 print("%s: Delivered package no. %s at location %s." % (current_time, package.package_id, location.address))
             self.eta = -1
             self.current_location = next_location.location_id
@@ -124,6 +127,9 @@ class TimedTruck(AbstractTruck):
         timed_packages_cluster = packageutil.to_location_clusters(timed_packages)
         solved = tsp.solve(deque(timed_packages_cluster), 0, 0)
         self.delivery_path = deque(solved[2])
+        for loc_cluster in self.delivery_path:
+            for package in loc_cluster:
+                package.delivery_status = DeliveryStatus.EnRoute
         packages.extend(delayed_packages)
 
     def load_packages_when(self, current_seconds) -> bool:

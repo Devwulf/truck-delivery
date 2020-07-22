@@ -1,5 +1,5 @@
 import csv
-from src.package import Package
+from src.package import Package, DeliveryStatus
 from src.location import Location
 from src.borg import Borg
 from src.hashmap import HashMap

@@ -14,6 +14,9 @@ class Event:
         for listener in self.listeners:
             listener(sender, eargs)
 
+    def __len__(self):
+        return len(self.listeners)
+
     __iadd__ = addListener
     __isub__ = removeListener
     __call__ = fire
