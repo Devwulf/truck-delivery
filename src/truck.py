@@ -23,6 +23,13 @@ class AbstractTruck(ABC):
         self.__sender = None
 
     def on_update(self, sender, current_seconds:int):
+        """
+        Runs on every tick of the clock.
+
+        :param sender: The clock object that runs this.
+        :param current_seconds: The current time in seconds.
+        :return: N/A
+        """
         if self.__sender is None:
             self.__sender = sender
 
@@ -32,23 +39,27 @@ class AbstractTruck(ABC):
             self.drive(current_seconds)
 
     def end_update(self):
+        """
+        Ends the update lifecycle of this object.
+
+        :return: N/A
+        """
         if self.__sender is None:
             return
         self.__sender.on_tick -= self.on_update
 
     def drive(self, current_seconds:int):
+        """
+        Makes the truck drive and move from location to location to
+        deliver the packages.
+
+        :param current_seconds: The current time in seconds.
+        :return: N/A
+        """
         if len(self.delivery_path) <= 0:
             return
 
         current_time:str = timeutil.to_time(current_seconds)
-
-        '''
-        if len(self.delivery_queue) <= 0:
-            if self.printed == False:
-                print("%s: Odometer for truck %s is at %s miles." % (current_time, self.id, self.odometer))
-                self.printed = True
-            return
-        '''
 
         next_location = self.delivery_path[0]
         current_location = Data().get_location(self.current_location)
@@ -87,9 +98,8 @@ class AbstractTruck(ABC):
         This is called to determine when the packages should be
         loaded into the truck. Called in the on_update() method
         like so:
-
-            if load_packages_when(current_seconds):
-                load_packages()
+            ``if load_packages_when(current_seconds):``
+                ``load_packages()``
 
         :param current_seconds: The current time in seconds
         :return: True if the packages should be loaded at the current second, False otherwise
@@ -106,9 +116,9 @@ class TimedTruck(AbstractTruck):
         super().__init__(id, speed)
 
     def load_packages(self):
-        packages:List[int] = Warehouse().get_packages()
+        packages:List[int] = Warehouse().packages
         if len(packages) <= 0:
-            print("Odometer of truck %s is: %s miles" % (self.truck_id, self.odometer))
+            print("Truck %s finished delivery! Odometer is: %s miles" % (self.truck_id, self.odometer))
             self.end_update()
             return
 
@@ -145,16 +155,16 @@ class DelayedTruck(AbstractTruck):
     def __init__(self, id, speed=18):
         super().__init__(id, speed)
         self.earliest_delay_time = math.inf
-        packages:List[int] = Warehouse().get_packages()
+        packages:List[int] = Warehouse().packages
         for package_id in packages:
             package:Package = Data().get_package(package_id)
             if package.is_delayed and package.delay_time < self.earliest_delay_time:
                 self.earliest_delay_time = package.delay_time
 
     def load_packages(self):
-        packages:List[int] = Warehouse().get_packages()
+        packages:List[int] = Warehouse().packages
         if len(packages) <= 0:
-            print("Odometer of truck %s is: %s miles" % (self.truck_id, self.odometer))
+            print("Truck %s finished delivery! Odometer is: %s miles" % (self.truck_id, self.odometer))
             self.end_update()
             return
 

@@ -7,10 +7,24 @@ time_regex = "^([1-9]|0[1-9]|1[0-2])[:]([0-5][0-9])[:]([0-5][0-9])[ ]([AP]M)$"
 time_no_secs_regex = "^([1-9]|0[1-9]|1[0-2])[:]([0-5][0-9])[ ]([AP]M)$"
 
 def to_time(seconds:int) -> str:
+    """
+    Converts the given time in seconds to a human-readable time string
+    of the format `HH:MM:SS [AM/PM]`
+
+    :param seconds: The seconds of the day that will be converted to a time string.
+    :return: The human-readable time string based on the given seconds.
+    """
     secs = int(seconds)
     return strftime("%I:%M:%S %p", gmtime(seconds))
 
 def to_seconds(time:str) -> int:
+    """
+    Converts the given human-readable time of the format `HH:MM(:SS) [AM/PM]`
+    to the amount of seconds since 12:00 AM of the same day.
+
+    :param time: The time string that will be converted to seconds.
+    :return: The total amount of seconds based on the given time string.
+    """
     value = time
     match = re.match(time_no_secs_regex, value)
     if match is not None:

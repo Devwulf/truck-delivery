@@ -1,5 +1,5 @@
 import csv
-from src.package import Package, DeliveryStatus
+from src.package import Package
 from src.location import Location
 from src.borg import Borg
 from src.hashmap import HashMap
@@ -13,15 +13,21 @@ class Data(Borg):
     def __init__(self, initialize=False):
         Borg.__init__(self)
         if initialize:
-            self.__packages = HashMap(50)
-            self.__locations = []
+            self.__packages = HashMap(40)
+            self.__locations = HashMap(27)
             self.__locations_matrix = []
             self.get_packages()
             self.get_locations()
             self.get_locations_matrix()
 
-    # TODO: Eventually use hashmap to store these data
     def get_packages(self) -> HashMap:
+        """
+        Reads the packages from the .csv file (if the packages hashmap
+        is not initialized) and returns the hashmap where the packages
+        are stored.
+
+        :return: The hashmap where the packages are stored.
+        """
         if len(self.__packages) > 0:
             return self.__packages
 
@@ -51,7 +57,15 @@ class Data(Borg):
 
         return self.__packages
 
-    def get_locations(self):
+    def get_locations(self) -> HashMap:
+        """
+        Reads the locations from the .csv file (if the locations hashmap
+        is not initialized) and returns the hashmap where the locations
+        are stored.
+
+        :return: The hashmap where the locations are stored.
+        """
+
         if len(self.__locations) > 0:
             return self.__locations
 
@@ -70,13 +84,20 @@ class Data(Borg):
 
                 try:
                     location = Location(location_id, name, address, city, state, zip_code)
-                    self.__locations.append(location)
+                    self.__locations.append(location.location_id, location)
                 except ValueError as e:
                     print(e)
 
         return self.__locations
 
     def get_locations_matrix(self):
+        """
+        Reads the distance matrix of the locations from the .csv file
+        (if the locations_matrix 2D array is not initialized) and returns
+        the 2D float array of the distance matrix.
+
+        :return: A 2D float array of the distance matrix of the locations
+        """
         if len(self.__locations_matrix) > 0:
             return self.__locations_matrix
 
@@ -97,14 +118,18 @@ class Data(Borg):
         return self.__locations_matrix
 
     def get_package(self, id:int) -> Package:
-        packages = self.get_packages()
-        if packages[id] is None:
-            print("Test %s" % id)
-        return packages[id]
+        """
+        :param id: The id of the package to be looked up from the hashmap.
+        :return: The package that was looked up using the given id.
+        """
+        return self.packages[id]
 
     def get_location(self, id:int) -> Location:
-        locations = self.get_locations()
-        return locations[id]
+        """
+        :param id: The id of the location to be looked up from the hashmap.
+        :return: The location that was looked up using the given id.
+        """
+        return self.locations[id]
 
     packages = property(get_packages)
     locations = property(get_locations)

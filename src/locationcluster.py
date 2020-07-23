@@ -11,18 +11,33 @@ class LocationCluster:
         self.__delay_time = -1
 
     def __get_packages(self):
+        """
+        :return: The packages to be delivered to the associated location.
+        """
         return self.__packages
 
     def __get_location_id(self):
+        """
+        :return: The location id of the associated location.
+        """
         return self.__location_id
 
     def __get_earliest_time(self):
+        """
+        :return: The earliest delivery time among the packages.
+        """
         return self.__earliest_time
 
     def __get_truck_req(self):
+        """
+        :return: The truck requirement based on the packages' truck requirement.
+        """
         return self.__truck_req
 
     def __get_delay_time(self):
+        """
+        :return: The earliest delay time among the packages.
+        """
         return self.__delay_time
 
     packages = property(__get_packages)
@@ -47,9 +62,22 @@ class LocationCluster:
         self.__packages.__delitem__(key)
 
     def clear(self):
+        """
+        Removes all the packages associated to this cluster.
+
+        :return: N/A
+        """
         self.__packages.clear()
 
-    def append(self, item:Package):
+    def append(self, item:Package) -> bool:
+        """
+        Adds the package into the list of packages associated to this cluster.
+        Also calculates the earliest time, truck requirement, and delay time
+        based on the added packages.
+
+        :param item: The package to be added to the packages list.
+        :return: True if the item is successfully added to the list, False if the package conflicts with other packages based on truck requirement and delay time.
+        """
         if item.delivery_time < self.earliest_time:
             self.__earliest_time = item.delivery_time
         if item.has_truck_req:

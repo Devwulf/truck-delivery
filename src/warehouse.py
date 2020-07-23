@@ -10,10 +10,17 @@ class Warehouse(Borg):
             hashmap:HashMap = Data().get_packages()
             self.__packages:List[int] = sorted(hashmap.keys())
 
-    def get_packages(self):
+    def __get_packages(self):
+        """
+        :return: The list of package ids currently in this warehouse.
+        """
         return self.__packages
 
-    def set_packages(self, value):
+    def __set_packages(self, value):
+        """
+        :param value: The list of packages to set the warehouse packages to.
+        :return: N/A
+        """
         self.__packages = value
 
-    packages = property(get_packages, set_packages)
+    packages = property(__get_packages, __set_packages)

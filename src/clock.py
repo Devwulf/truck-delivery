@@ -4,6 +4,10 @@ import src.timeutil as timeutil
 from src.borg import Borg
 
 class Clock(Borg):
+    """
+    Used to simulate the passing of time. Important to simulate
+    trucks driving around and delivering packages.
+    """
     def __init__(self, initialize=False):
         Borg.__init__(self)
         if initialize:
@@ -17,6 +21,16 @@ class Clock(Borg):
             self.timer = None
 
     def start(self, start_time, end_time, interval_secs, time_delta):
+        """
+        Starts the clock at the given start time, and automatically ends
+        at the given end time.
+
+        :param start_time: The time to start the clock at.
+        :param end_time: The time to end the clock at.
+        :param interval_secs: The interval (in seconds) that the Thread waits before ticking.
+        :param time_delta: The interval of time (in seconds) that should pass for this virtual clock every tick.
+        :return: N/A
+        """
         if self.timer is not None:
             return
 
@@ -35,12 +49,23 @@ class Clock(Borg):
             print(e)
 
     def stop(self):
+        """
+        Stops the timer by canceling the current Thread.
+
+        :return: N/A
+        """
         if self.timer is None:
             return
         self.timer.cancel()
         self.timer = None
 
     def _tick(self):
+        """
+        Runs every tick of the clock. This also handles the functions
+        subscribed to the on_tick event.
+
+        :return: N/A
+        """
         self.current_time += self.time_delta
         self.on_tick(self, self.current_time)
         if len(self.on_tick) <= 0 or self.current_time >= self.end_time:
