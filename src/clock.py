@@ -9,6 +9,11 @@ class Clock(Borg):
     trucks driving around and delivering packages.
     """
     def __init__(self, initialize=False):
+        """
+        Space: O(1) Time: O(1)
+
+        :param initialize: If True, this singleton should be initialized.
+        """
         Borg.__init__(self)
         if initialize:
             self.on_tick = Event()
@@ -24,6 +29,8 @@ class Clock(Borg):
         """
         Starts the clock at the given start time, and automatically ends
         at the given end time.
+
+        Space: O(1) Time: O(1)
 
         :param start_time: The time to start the clock at.
         :param end_time: The time to end the clock at.
@@ -52,6 +59,8 @@ class Clock(Borg):
         """
         Stops the timer by canceling the current Thread.
 
+        Space: O(1) Time: O(1)
+
         :return: N/A
         """
         if self.timer is None:
@@ -63,6 +72,8 @@ class Clock(Borg):
         """
         Runs every tick of the clock. This also handles the functions
         subscribed to the on_tick event.
+
+        Space: O(1) Time: O(1)
 
         :return: N/A
         """

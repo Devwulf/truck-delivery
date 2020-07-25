@@ -18,13 +18,15 @@ def solve(locations:Deque[LocationCluster], start_id:int, end_id:int):
     This has a time complexity of O(n^3), although an optimization can be
     implemented on calculating the overall distance to make it O(n^2) instead.
 
+    Space: O(n^2) Time: O(n^3)
+
     :param locations: A queue of locations (as LocationCluster) to solve the TSP problem for.
     :param start_id: The id of the starting location.
     :param end_id: The id of the ending location.
     :return: An array of the shortest distance, the shortest time, and the shortest path.
     """
     start_node = LocationCluster(start_id)
-    final_arr = [start_node]
+    shortest_path = [start_node]
     shortest_distance = 0
     shortest_time = 0
     while len(locations) > 0:
@@ -34,31 +36,33 @@ def solve(locations:Deque[LocationCluster], start_id:int, end_id:int):
 
         short_dist = math.inf
         short_time = 0
-        shortest_path = []
-        for i in range(len(final_arr)):
-            array = final_arr.copy()
+        short_path = []
+        for i in range(len(shortest_path)):
+            array = shortest_path.copy()
             array.insert(i + 1, current_loc)
             distance = overall_distance(array, lambda location: location.location_id)
             #time = overall_time(array, lambda location: location.location_id)
             if distance <= short_dist:
                 short_dist = distance
                 #short_time = time
-                shortest_path = array
+                short_path = array
         shortest_distance = short_dist
         #shortest_time = short_time
-        final_arr = shortest_path
+        shortest_path = short_path
     if end_id >= 0:
-        last_to_start = Pathfinder().get_path(final_arr[-1].location_id, end_id)
+        last_to_start = Pathfinder().get_path(shortest_path[-1].location_id, end_id)
         shortest_distance += last_to_start.distance
         #shortest_time += last_to_start.time
-        final_arr.append(LocationCluster(end_id))
-    if final_arr[0].location_id == final_arr[-1].location_id and len(final_arr) == 2:
+        shortest_path.append(LocationCluster(end_id))
+    if shortest_path[0].location_id == shortest_path[-1].location_id and len(shortest_path) == 2:
         return [0, 0, []]
-    return [shortest_distance, timeutil.to_time(shortest_time), final_arr[1:]]
+    return [shortest_distance, timeutil.to_time(shortest_time), shortest_path[1:]]
 
 def overall_distance(path_array, get_id) -> float:
     """
     Calculates the overall distance of the given path.
+
+    Space: O(n) Time: O(n)
 
     :param path_array: The path to calculate the distance for.
     :param get_id: The conversion function used to convert the package to id.
@@ -77,6 +81,8 @@ def overall_distance(path_array, get_id) -> float:
 def overall_time(path_array, get_id) -> float:
     """
     Calculates the overall time spent taking the given path.
+
+    Space: O(n) Time: O(n)
 
     :param path_array: The path to calculate the time for.
     :param get_id: The conversion function used to convert the package to id.

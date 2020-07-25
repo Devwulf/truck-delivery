@@ -13,6 +13,21 @@ class DeliveryStatus(IntEnum):
 
 class Package:
     def __init__(self, package_id, address_id, delivery_time, has_truck_req, truck_req, is_delayed, delay_time, has_package_req, package_req, mass, delivery_status):
+        """
+        Space: O(1) Time: O(1)
+
+        :param package_id: The id of this package.
+        :param address_id: The id of the location this package will be delivered to.
+        :param delivery_time: The time (in time string) that this package should be delivered by.
+        :param has_truck_req: A boolean that shows whether this package has a truck requirement.
+        :param truck_req: The truck requirement of this package.
+        :param is_delayed: A boolean that shows whether this package is delayed.
+        :param delay_time: The expected time for the package to arrive at the hub.
+        :param has_package_req: A boolean that shows whether this package has a package requirement.
+        :param package_req: The package requirement (as an array string) of this package
+        :param mass: The mass, in kilograms, of this package.
+        :param delivery_status: The delivery status of package.
+        """
         self.package_id = package_id
         self.address_id = address_id
         self.delivery_time = delivery_time
@@ -28,12 +43,16 @@ class Package:
 
     def _get_package_id(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The id of this package.
         """
         return self._package_id
 
     def _set_package_id(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The id that the package id should be set to. Can be an integer string.
         :return: N/A
         """
@@ -44,12 +63,16 @@ class Package:
 
     def _get_address_id(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The id of the address that this package is to be delivered to.
         """
         return self._address_id
 
     def _set_address_id(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The id of the address that this package should be delivered to. Can be an integer string.
         :return: N/A
         """
@@ -60,18 +83,24 @@ class Package:
 
     def _get_is_timed(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: True if the package delivery time is below 86399 seconds (11:59:59 PM), False otherwise.
         """
         return self.delivery_time < 86399.0
 
     def _get_delivery_time(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The time that this package is supposed to be delivered by.
         """
         return self._delivery_time
 
     def _set_delivery_time(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The time as a readable string. Has to be of the format HH:MM(:SS) [AM/PM] or set to EOD, which will be set to 11:59:59 PM.
         :return: N/A
         """
@@ -80,12 +109,16 @@ class Package:
 
     def _get_has_truck_req(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: True if the package has any truck requirements (e.g. should be delivered by truck 2), False otherwise.
         """
         return self._has_truck_req
 
     def _set_has_truck_req(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The boolean value to be set to has_truck_req. Has to be either 0 or 1. Can be an integer string.
         :return: N/A
         """
@@ -95,12 +128,16 @@ class Package:
 
     def _get_truck_req(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The id of the truck that this package should be in.
         """
         return self._truck_req
 
     def _set_truck_req(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The id of the truck that this package should be in.
         :return: N/A
         """
@@ -109,12 +146,16 @@ class Package:
 
     def _get_is_delayed(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: True if the package is delayed, False otherwise
         """
         return self._is_delayed
 
     def _set_is_delayed(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The boolean value to be set to is_delayed. Has to be either 0 or 1. Can be an integer string.
         :return: N/A
         """
@@ -124,12 +165,16 @@ class Package:
 
     def _get_delay_time(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The time, in seconds, that this delayed package will arrive at the warehouse.
         """
         return self._delay_time
 
     def _set_delay_time(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The time as a readable string. Has to be of the format HH:MM(:SS) [AM/PM] or set to -1, which will be set to 11:59:59 PM.
         :return: N/A
         """
@@ -138,12 +183,16 @@ class Package:
 
     def _get_has_package_req(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: True if the package has to be with other packages when being delivered, False otherwise.
         """
         return self._has_package_req
 
     def _set_has_package_req(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The boolean value to be set to has_package_req. Has to be either 0 or 1. Can be an integer string.
         :return: N/A
         """
@@ -153,12 +202,16 @@ class Package:
 
     def _get_package_req(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: An array of the package ids that this package should be delivered with.
         """
         return self._package_req
 
     def _set_package_req(self, value):
         """
+        Space: O(n) Time: O(n)
+
         :param value: An array, in string form, of package ids that this package should be delivered with. Examples of the different formats are: "13, 19" or "[13, 19]".
         :return: N/A
         """
@@ -179,12 +232,16 @@ class Package:
 
     def _get_mass(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The mass, in kilograms, of the package.
         """
         return self._mass
 
     def _set_mass(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The mass, in kilograms, that this package should be set to.
         :return: N/A
         """
@@ -192,12 +249,16 @@ class Package:
 
     def _get_delivery_status(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The current delivery status of this package, as represented by the DeliveryStatus enum.
         """
         return self._delivery_status
 
     def _set_delivery_status(self, value):
         """
+        Space: O(1) Time: O(1)
+
         :param value: The delivery status that this package should be set to.
         :return: N/A
         """
@@ -216,10 +277,12 @@ class Package:
     mass = property(_get_mass, _set_mass)
     delivery_status = property(_get_delivery_status, _set_delivery_status)
 
-    def __repr__(self):
-        return str(self.package_id)
-
     def __str__(self):
+        """
+        Space: O(1) Time: O(1)
+
+        :return: The string representation of this package.
+        """
         message = ""
         message += "Package %s\n" % self.package_id
 

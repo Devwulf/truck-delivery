@@ -3,6 +3,11 @@ import math
 
 class HashMap:
     def __init__(self, size):
+        """
+        Space: O(n^2) Time: O(n)
+
+        :param size: The max size of this hashmap.
+        """
         size = math.ceil(size * 1.5)
         self.__map:List[List[KeyValuePair]] = [[] for i in range(size)]
         self.__size = 0
@@ -13,6 +18,8 @@ class HashMap:
         Appends the given key and value pair to the hashmap by hashing
         the given key. If new keys have the same hash key as the older
         ones, they are both placed in the same array under the hash key.
+
+        Space: O(n) Time: O(n)
 
         :param key: The key used to identify the value.
         :param value: The value of the given key.
@@ -31,6 +38,8 @@ class HashMap:
         """
         Removes the key-value pair from the map and returns the value.
 
+        Space: O(n) Time: O(n)
+
         :param key: The key of the value to be removed and returned.
         :return: The value removed from the map.
         """
@@ -47,6 +56,8 @@ class HashMap:
         Creates and returns an array of the key-value pairs in this
         map.
 
+        Space: O(n^2) Time: O(n^2)
+
         :return: An array of the key-value pairs in this map.
         """
         result = []
@@ -59,6 +70,8 @@ class HashMap:
         """
         Creates and returns an array of only the keys in this map.
 
+        Space: O(n^2) Time: O(n^2)
+
         :return: An array of only the keys in this map.
         """
         result = []
@@ -70,6 +83,8 @@ class HashMap:
     def values(self):
         """
         Creates and returns an array of only the values in this map.
+
+        Space: O(n^2) Time: O(n^2)
 
         :return: An array of only the values in this map.
         """
@@ -84,6 +99,8 @@ class HashMap:
         Hashes the key to (hopefully) create a unique enough index
         to store the key-value pair into.
 
+        Space: O(n) Time: O(n)
+
         :param key: The key to be hashed.
         :return: The hashed key.
         """
@@ -97,6 +114,8 @@ class HashMap:
         """
         Looks up a key in the map and returns the value associated to it.
 
+        Space: O(n) Time: O(n)
+
         :param key: The key of the value to be looked up.
         :return: The value looked up in map.
         """
@@ -109,6 +128,8 @@ class HashMap:
 
     def __delitem__(self, key):
         """
+        Space: O(n) Time: O(n)
+
         :param key: The key of the value to be removed from the map.
         :return: N/A
         """
@@ -116,27 +137,27 @@ class HashMap:
 
     def __len__(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The amount of the key-value pairs in this map.
         """
         return self.__size
 
     def __iter__(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The iterator of the map itself.
         """
         return self.__map.__iter__()
 
-    def __repr__(self):
-        message = ""
-        for kv_arr in self.__map:
-            for kv in kv_arr:
-                message += "%s" % (kv)
-        return message
-
 class KeyValuePair:
     def __init__(self, key, value):
+        """
+        Space: O(1) Time: O(1)
+
+        :param key: The key in this pair.
+        :param value: The value in this pair.
+        """
         self.key = key
         self.value = value
-
-    def __repr__(self):
-        return "%s: %s" % (self.key, self.value)

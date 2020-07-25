@@ -4,6 +4,11 @@ import math
 
 class LocationCluster:
     def __init__(self, id:int):
+        """
+        Space: O(n) Time: O(1)
+
+        :param id: The id of the location that this cluster is associated to.
+        """
         self.__packages:List[Package] = []
         self.__location_id = id
         self.__earliest_time = math.inf
@@ -12,30 +17,40 @@ class LocationCluster:
 
     def __get_packages(self):
         """
+        Space: O(n) Time: O(1)
+
         :return: The packages to be delivered to the associated location.
         """
         return self.__packages
 
     def __get_location_id(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The location id of the associated location.
         """
         return self.__location_id
 
     def __get_earliest_time(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The earliest delivery time among the packages.
         """
         return self.__earliest_time
 
     def __get_truck_req(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The truck requirement based on the packages' truck requirement.
         """
         return self.__truck_req
 
     def __get_delay_time(self):
         """
+        Space: O(1) Time: O(1)
+
         :return: The earliest delay time among the packages.
         """
         return self.__delay_time
@@ -47,23 +62,44 @@ class LocationCluster:
     delay_time = property(__get_delay_time)
 
     def __len__(self):
+        """
+        Space: O(1) Time: O(1)
+
+        :return: The length of the packages in this cluster.
+        """
         return len(self.__packages)
 
-    def __getitem__(self, key:int):
-        return self.__packages[key]
+    def __getitem__(self, index:int):
+        """
+        Space: O(1) Time: O(1)
 
-    def __repr__(self):
-        return "%s-%s: %s" % (self.location_id, self.earliest_time, self.__packages.__repr__())
+        :param index: The index of the value to be returned.
+        :return:
+        """
+        return self.__packages[index]
 
     def __iter__(self):
+        """
+        Space: O(1) Time: O(1)
+
+        :return: The iterator of the internal package list.
+        """
         return self.__packages.__iter__()
 
-    def __delitem__(self, key:int):
-        self.__packages.__delitem__(key)
+    def __delitem__(self, index:int):
+        """
+        Space: O(n) Time: O(n)
+
+        :param index: The index of the value to be deleted.
+        :return: N/A
+        """
+        self.__packages.__delitem__(index)
 
     def clear(self):
         """
         Removes all the packages associated to this cluster.
+
+        Space: O(n) Time: O(n)
 
         :return: N/A
         """
@@ -74,6 +110,8 @@ class LocationCluster:
         Adds the package into the list of packages associated to this cluster.
         Also calculates the earliest time, truck requirement, and delay time
         based on the added packages.
+
+        Space: O(1) Time: O(1)
 
         :param item: The package to be added to the packages list.
         :return: True if the item is successfully added to the list, False if the package conflicts with other packages based on truck requirement and delay time.

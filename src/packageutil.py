@@ -15,6 +15,8 @@ def get_packages_and(packages:List[int], is_timed, is_delayed):
 
     Note: This also removes the filtered packages from the given packages list.
 
+    Space: O(n) Time: O(n)
+
     :param packages: The list of packages to filter.
     :param is_timed: The boolean criteria determining whether the package is time-sensitive.
     :param is_delayed: The boolean criteria determining whether the package is delayed.
@@ -33,6 +35,8 @@ def get_packages_or(packages:List[int], is_timed, is_delayed):
 
     Note: This also removes the filtered packages from the given packages list.
 
+    Space: O(n) Time: O(n)
+
     :param packages: The list of packages to filter.
     :param is_timed: The boolean criteria determining whether the package is time-sensitive.
     :param is_delayed: The boolean criteria determining whether the package is delayed.
@@ -46,6 +50,8 @@ def get_timed_packages_only(packages:List[int], is_not=False):
 
     Note: This also removes the filtered packages from the given packages list.
 
+    Space: O(n) Time: O(n)
+
     :param packages: The list of packages to filter.
     :param is_not: The boolean criteria determining whether to get all the packages that are NOT time-sensitive instead.
     :return: The list of packages matching the given criteria.
@@ -57,6 +63,8 @@ def get_delayed_packages_only(packages:List[int], is_not=False):
     Gets only the delayed packages.
 
     Note: This also removes the filtered packages from the given packages list.
+
+    Space: O(n) Time: O(n)
 
     :param packages: The list of packages to filter.
     :param is_not: The boolean criteria determining whether to get all the packages that are NOT delayed instead.
@@ -72,6 +80,8 @@ def get_packages_with_predicate(packages:List[int], predicate: Callable[[Package
             ``get_packages_with_predicate(packages, predicate=lambda package: package.truck_req == 2)``
 
     Note: This also removes the filtered packages from the given packages list.
+
+    Space: O(n) Time: O(n)
 
     :param packages: The list of packages to filter.
     :param predicate: The predicate used to filter the packages.
@@ -93,6 +103,8 @@ def get_package_ids_with_same_package_req(packages:List[int]):
     Gets only the package ids of the packages that need to be together
     based on their package requirements.
 
+    Space: O(n) Time: O(n^2)
+
     :param packages: The list of packages to filter.
     :return: The package ids of the packages that need to be together based on their package requirements.
     """
@@ -112,6 +124,8 @@ def to_location_clusters(packages:List[int]) -> List[LocationCluster]:
     Converts the list of package ids to a list of locations clusters
     with the packages going to the same locations being in the same
     cluster.
+
+    Space: O(n) Time: O(n)
 
     :param packages: The list of package ids to make into location clusters.
     :return: The list of location clusters containing the package objects.
@@ -133,6 +147,8 @@ def to_packages(location_clusters:List[LocationCluster]):
     """
     Converts the list of location clusters to a flattened list of
     package ids not grouped together.
+
+    Space: O(n) Time: O(n^2)
 
     :param location_clusters: The list of location clusters to make into package ids.
     :return: The list of package ids contained in the given location clusters.
@@ -158,6 +174,8 @@ def fill_up(first_arr:List[int], second_arr:List[int], amount:int, significant_o
     However, instead of filling up the first array, it returns the array
     of ids that will fill up the first array. The second array is still
     modified to not include the ids removed from it.
+
+    Space: O(n) Time: O(n^2)
 
     :param first_arr: The array of package ids to fill up to.
     :param second_arr: The array of package ids to fill up from.
@@ -212,6 +230,8 @@ def fill_with_same_package_req(first_arr:List[int], second_arr:List[int], packag
     However, instead of filling up the first array, it returns the array
     of ids that will fill up the first array. The second array is still
     modified to not include the ids removed from it.
+
+    Space: O(n) Time: O(n)
 
     :param first_arr: The array of package ids to fill up to.
     :param second_arr: The array of package ids to fill up from.

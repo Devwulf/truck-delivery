@@ -11,6 +11,8 @@ def to_time(seconds:int) -> str:
     Converts the given time in seconds to a human-readable time string
     of the format `HH:MM:SS [AM/PM]`
 
+    Space: O(1) Time: O(1)
+
     :param seconds: The seconds of the day that will be converted to a time string.
     :return: The human-readable time string based on the given seconds.
     """
@@ -21,6 +23,8 @@ def to_seconds(time:str) -> int:
     """
     Converts the given human-readable time of the format `HH:MM(:SS) [AM/PM]`
     to the amount of seconds since 12:00 AM of the same day.
+
+    Space: O(1) Time: O(1)
 
     :param time: The time string that will be converted to seconds.
     :return: The total amount of seconds based on the given time string.

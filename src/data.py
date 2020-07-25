@@ -11,6 +11,11 @@ class Data(Borg):
     _location_weights_file = "location-weights.csv"
 
     def __init__(self, initialize=False):
+        """
+        Space: O(n^2) Time: O(n^2)
+
+        :param initialize: If True, this singleton should be initialized.
+        """
         Borg.__init__(self)
         if initialize:
             self.__packages = HashMap(40)
@@ -25,6 +30,8 @@ class Data(Borg):
         Reads the packages from the .csv file (if the packages hashmap
         is not initialized) and returns the hashmap where the packages
         are stored.
+
+        Space: O(n^2) Time: O(n)
 
         :return: The hashmap where the packages are stored.
         """
@@ -63,6 +70,8 @@ class Data(Borg):
         is not initialized) and returns the hashmap where the locations
         are stored.
 
+        Space: O(n^2) Time: O(n)
+
         :return: The hashmap where the locations are stored.
         """
 
@@ -96,6 +105,8 @@ class Data(Borg):
         (if the locations_matrix 2D array is not initialized) and returns
         the 2D float array of the distance matrix.
 
+        Space: O(n^2) Time: O(n^2)
+
         :return: A 2D float array of the distance matrix of the locations
         """
         if len(self.__locations_matrix) > 0:
@@ -119,6 +130,8 @@ class Data(Borg):
 
     def get_package(self, id:int) -> Package:
         """
+        Space: O(1) Time: O(1)
+
         :param id: The id of the package to be looked up from the hashmap.
         :return: The package that was looked up using the given id.
         """
@@ -126,6 +139,8 @@ class Data(Borg):
 
     def get_location(self, id:int) -> Location:
         """
+        Space: O(1) Time: O(1)
+
         :param id: The id of the location to be looked up from the hashmap.
         :return: The location that was looked up using the given id.
         """

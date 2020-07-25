@@ -12,12 +12,16 @@ class Warehouse(Borg):
 
     def __get_packages(self):
         """
+        Space: O(n) Time: O(1)
+
         :return: The list of package ids currently in this warehouse.
         """
         return self.__packages
 
     def __set_packages(self, value):
         """
+        Space: O(n) Time: O(1)
+
         :param value: The list of packages to set the warehouse packages to.
         :return: N/A
         """
