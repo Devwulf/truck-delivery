@@ -1,3 +1,5 @@
+# Mark Christian Malabanan, Student ID #001233960
+
 import re
 import src.timeutil as timeutil
 from enum import IntEnum
@@ -276,6 +278,14 @@ class Package:
     package_req = property(_get_package_req, _set_package_req)
     mass = property(_get_mass, _set_mass)
     delivery_status = property(_get_delivery_status, _set_delivery_status)
+
+    def __repr__(self):
+        """
+        Space: O(1) Time: O(1)
+
+        :return: The representation of this package when printed without converting to string.
+        """
+        return str(self.package_id)
 
     def __str__(self):
         """

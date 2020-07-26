@@ -1,3 +1,5 @@
+# Mark Christian Malabanan, Student ID #001233960
+
 # A constant length array, where remove simply sets the value to none
 # search: O(n), access: O(1), remove: O(1), add: N/A, insert: O(1)
 class ConstantArray:

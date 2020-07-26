@@ -1,3 +1,5 @@
+# Mark Christian Malabanan, Student ID #001233960
+
 from collections import deque
 from src.pathfinder import Pathfinder
 from src.data import Data
@@ -86,7 +88,7 @@ class AbstractTruck(ABC):
                 self.delivery_path.popleft()
                 return
 
-            print("%s: Driving from location %s to location %s to deliver packages '%s'." % (current_time, current_location.address, location.address, next_location.packages))
+            print("%s - Truck %s: Driving from location %s to location %s to deliver packages '%s'." % (current_time, self.truck_id, current_location.address, location.address, next_location.packages))
             path_node = Pathfinder().get_path(self.current_location, next_location.location_id)
             self.eta = path_node.distance / self.speed * 60 * 60 + current_seconds
             self.odometer += path_node.distance
@@ -100,7 +102,7 @@ class AbstractTruck(ABC):
                 delivery_status = DeliveryStatus.DeliveredLate if package.is_timed and current_seconds > package.delivery_time else DeliveryStatus.Delivered
                 package.delivery_status = delivery_status.value
                 package.delivered_at = current_seconds
-                print("%s: Delivered package no. %s at location %s." % (current_time, package.package_id, location.address))
+                print("%s - Truck %s: Delivered package no. %s at location %s." % (current_time, self.truck_id, package.package_id, location.address))
             self.eta = -1
             self.current_location = next_location.location_id
 
@@ -164,6 +166,7 @@ class TimedTruck(AbstractTruck):
         if len(timed_packages) < 16:
             timed_packages.extend(packageutil.fill_up(timed_packages, packages, 16 - len(timed_packages)))
 
+        print("Loaded packages into truck %s: %s" % (self.truck_id, timed_packages))
         # Convert the package ids to location clusters and solve for TSP
         timed_packages_cluster = packageutil.to_location_clusters(timed_packages)
         solved = tsp.solve(deque(timed_packages_cluster), 0, 0)
@@ -225,6 +228,7 @@ class DelayedTruck(AbstractTruck):
         if len(delayed_packages) < 16:
             delayed_packages.extend(packageutil.fill_up(delayed_packages, packages, 16 - len(delayed_packages)))
 
+        print("Loaded packages into truck %s: %s" % (self.truck_id, delayed_packages))
         delayed_packages_cluster = packageutil.to_location_clusters(delayed_packages)
         # Convert the package ids to location clusters and solve for TSP
         solved = tsp.solve(deque(delayed_packages_cluster), 0, 0)

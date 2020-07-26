@@ -1,3 +1,5 @@
+# Mark Christian Malabanan, Student ID #001233960
+
 import math
 from src.pathfinder import Pathfinder
 from src.locationcluster import LocationCluster
@@ -26,10 +28,12 @@ def solve(locations:Deque[LocationCluster], start_id:int, end_id:int):
     :return: An array of the shortest distance, the shortest time, and the shortest path.
     """
     start_node = LocationCluster(start_id)
+    # Initialize everything
     shortest_path = [start_node]
     shortest_distance = 0
     shortest_time = 0
     while len(locations) > 0:
+        # Get the location to be inserted into the path
         current_loc = locations.popleft()
         if current_loc is None:
             continue
@@ -38,22 +42,36 @@ def solve(locations:Deque[LocationCluster], start_id:int, end_id:int):
         short_time = 0
         short_path = []
         for i in range(len(shortest_path)):
+            # Create a new copy of the shortest path so it doesn't get
+            # modified when testing different paths. Then insert the
+            # location to each index of the array.
             array = shortest_path.copy()
             array.insert(i + 1, current_loc)
+            # Get the overall distance of this path
             distance = overall_distance(array, lambda location: location.location_id)
             #time = overall_time(array, lambda location: location.location_id)
+            # Compare distances with the previous paths tested. If this
+            # path has a shorter distance, use this path.
             if distance <= short_dist:
                 short_dist = distance
                 #short_time = time
                 short_path = array
+        # After testing all possible configurations of this path, use
+        # the shortest path found as the shortest path for the locations
+        # added so far. This will keep changing until there are no other
+        # locations to be added to the path.
         shortest_distance = short_dist
         #shortest_time = short_time
         shortest_path = short_path
     if end_id >= 0:
+        # If an end location id is provided, add it to the path so the
+        # truck goes there after delivering all the packages.
         last_to_start = Pathfinder().get_path(shortest_path[-1].location_id, end_id)
         shortest_distance += last_to_start.distance
         #shortest_time += last_to_start.time
         shortest_path.append(LocationCluster(end_id))
+    # If there are only two locations in the path and they're the same
+    # location, then return an empty path.
     if shortest_path[0].location_id == shortest_path[-1].location_id and len(shortest_path) == 2:
         return [0, 0, []]
     return [shortest_distance, timeutil.to_time(shortest_time), shortest_path[1:]]

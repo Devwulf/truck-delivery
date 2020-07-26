@@ -1,3 +1,5 @@
+# Mark Christian Malabanan, Student ID #001233960
+
 from src.borg import Borg
 from src.data import Data
 from src.hashmap import HashMap
@@ -5,6 +7,11 @@ from typing import List
 
 class Warehouse(Borg):
     def __init__(self, initialize=False):
+        """
+        Space: O(n^2) Time: O(n^2)
+
+        :param initialize: If True, this singleton should be initialized.
+        """
         Borg.__init__(self)
         if initialize:
             hashmap:HashMap = Data().get_packages()

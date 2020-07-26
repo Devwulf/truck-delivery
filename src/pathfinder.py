@@ -1,6 +1,7 @@
+# Mark Christian Malabanan, Student ID #001233960
+
 import math
 from src.borg import Borg
-from collections import deque
 from src.constantarray import ConstantArray
 
 # Note: We cannot use the A* algorithm because all the nodes are connected

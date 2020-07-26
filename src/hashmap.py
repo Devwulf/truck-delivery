@@ -1,3 +1,5 @@
+# Mark Christian Malabanan, Student ID #001233960
+
 from typing import List
 import math
 
@@ -19,7 +21,7 @@ class HashMap:
         the given key. If new keys have the same hash key as the older
         ones, they are both placed in the same array under the hash key.
 
-        Space: O(n) Time: O(n)
+        Space: O(1) Time: O(1)
 
         :param key: The key used to identify the value.
         :param value: The value of the given key.
@@ -38,7 +40,7 @@ class HashMap:
         """
         Removes the key-value pair from the map and returns the value.
 
-        Space: O(n) Time: O(n)
+        Space: O(1) Time: O(1)
 
         :param key: The key of the value to be removed and returned.
         :return: The value removed from the map.
@@ -99,7 +101,7 @@ class HashMap:
         Hashes the key to (hopefully) create a unique enough index
         to store the key-value pair into.
 
-        Space: O(n) Time: O(n)
+        Space: O(1) Time: O(1)
 
         :param key: The key to be hashed.
         :return: The hashed key.
@@ -114,7 +116,7 @@ class HashMap:
         """
         Looks up a key in the map and returns the value associated to it.
 
-        Space: O(n) Time: O(n)
+        Space: O(1) Time: O(1)
 
         :param key: The key of the value to be looked up.
         :return: The value looked up in map.
@@ -128,7 +130,7 @@ class HashMap:
 
     def __delitem__(self, key):
         """
-        Space: O(n) Time: O(n)
+        Space: O(1) Time: O(1)
 
         :param key: The key of the value to be removed from the map.
         :return: N/A

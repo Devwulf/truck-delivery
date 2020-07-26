@@ -1,3 +1,5 @@
+# Mark Christian Malabanan, Student ID #001233960
+
 from src.event import Event
 import threading
 import src.timeutil as timeutil

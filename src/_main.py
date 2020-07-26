@@ -1,3 +1,5 @@
+# Mark Christian Malabanan, Student ID #001233960
+
 from src.data import Data
 from src.clock import Clock
 from src.pathfinder import Pathfinder
@@ -25,7 +27,7 @@ class Main:
         clock.start("8:00 AM", "11:59:59 PM", 0.01, 20)
 
     def on_clock_stop(self, sender, current_seconds):
-        print("%s: The day has ended! Total truck mileage: %s miles" % (timeutil.to_time(current_seconds), self.truck.odometer + self.truck2.odometer))
+        print("%s: The day has ended!" % (timeutil.to_time(current_seconds)))
         packages = Data().get_packages().values()
         packages = sorted(packages, key=lambda package: package.package_id)
         success_count = 0
@@ -36,7 +38,7 @@ class Main:
             else:
                 failed_count += 1
             print(package)
-        print("Successfully delivered: %s\nFailed to deliver (late or not delivered): %s" % (success_count, failed_count))
+        print("Total truck mileage: %s miles\nSuccessfully delivered: %s\nFailed to deliver (late or not delivered): %s" % (self.truck.odometer + self.truck2.odometer, success_count, failed_count))
 
 if __name__ == "__main__":
     Main().run()
