@@ -1,7 +1,6 @@
 # Mark Christian Malabanan, Student ID #001233960
 
 import re
-import textwrap
 
 state_regex = "^([A-Z][A-Z])$"
 class Location:
